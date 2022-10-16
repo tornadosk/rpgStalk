@@ -12,10 +12,17 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+        PDA {{$t('welcome')}}
+        <div class="q-pa-md">
+          <q-linear-progress class="" size="15px" :value="progress1" color="red">
+            <div class="absolute-full flex flex-center">
+              <q-badge color="white" text-color="accent" :label="progressLabel1" />
+            </div>
+          </q-linear-progress>
+        </div>
         </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn color="primary" icon="check" label="українська" @click="$i18n.locale ='uk-UK'" />
+        <div>Quasar v {{$t('version')}}</div>
       </q-toolbar>
     </q-header>
 
@@ -46,51 +53,37 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
+import { colors, setCssVar } from 'quasar'
+import { useCounterStore } from '../stores/example-store'
+
+const { lighten } = colors
 
 const linksList = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
+    title: 'Task',
+    caption: 'Tasks related info',
     icon: 'school',
-    link: 'https://quasar.dev'
+    link: '/tasks'
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
+    title: 'Map',
+    caption: 'Map around',
     icon: 'code',
-    link: 'https://github.com/quasarframework'
+    link: '/'
   },
   {
     title: 'Discord Chat Channel',
     caption: 'chat.quasar.dev',
     icon: 'chat',
-    link: 'https://chat.quasar.dev'
+    link: '/link-to-discord'
   },
   {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
+    title: 'Your Health',
+    caption: 'Radiation, poison level, health bars',
     icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+    link: '/params'
   }
 ]
 
@@ -102,9 +95,17 @@ export default defineComponent({
   },
 
   setup () {
+    const store = useCounterStore()
     const leftDrawerOpen = ref(false)
+    const progress1 = ref(store.health)
+    console.log(progress1)
+    const newPrimaryColor = '#933' // portion to autochange color on the go
+    setCssVar('primary', newPrimaryColor)
+    setCssVar('primary-darkened', lighten(newPrimaryColor, -10))
 
     return {
+      progress1,
+      progressLabel1: computed(() => (progress1.value * 100).toFixed(2) + '%'),
       essentialLinks: linksList,
       leftDrawerOpen,
       toggleLeftDrawer () {
