@@ -1,7 +1,8 @@
-const { getTasks } = require('../../controllers/tasksController')
+const checkIfAuthenticated = require('../../auth')
+const { getTasks } = require('../../controllers/tasksController');
 
-const router = require('express').Router()
+const router = require('express').Router();
 
-router.get('/tasks', getTasks)
+router.get('', getTasks);
 
-module.exports = router
+module.exports = router;

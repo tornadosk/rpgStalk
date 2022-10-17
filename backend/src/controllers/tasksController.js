@@ -1,10 +1,9 @@
-const database = require('../db')
+const { firestore } = require('../db')
 
-const db = database.firestore()
 
 exports.getTasks = (async (req, res) => {
     let tasks = [] 
-    await db.collection('tasks').get()
+    await firestore().collection('tasks').get()
     .then(snapshot => {
         snapshot.forEach((doc) => {
             tasks.push(doc.data())

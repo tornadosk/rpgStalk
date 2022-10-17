@@ -2,47 +2,39 @@ const express = require('express')
 const bodyparser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
-// const db = require('./db')
+const checkIfAuthenticated = require('./auth')
+const app = express()
 
-const apP = express()
-
-apP.use(morgan('combined'))
-apP.use(bodyparser.json())
-apP.use(cors())
+app.use(morgan('combined'))
+app.use(bodyparser.json())
+app.use(cors())
 
 
-// apP.use(require('./routes'))
-const admin = require('firebase-admin')
-const serviceAccount = require('../env/stalkerrpggame-firebase-adminsdk-z1iot-a3d4dd0c8d')
 
-const db = admin.initializeApp({
-    credentials: admin.credential.cert(serviceAccount)
+app.use(function(req, res, next) {
+    if (req.originalUrl === 'some.web.ifneedraw') {
+        app.use(express.raw())
+        next();
+      } else {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Methods', 'DELETE, PUT, GET, POST');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+    }
 })
 
+
+app.use(require('./routes'));
+
+const { admin, firestore } = require('./db')
 
 console.log('hello')
 
-apP.get('/tasks', async (req, res) => {
-    console.log('entered')
-    let tasks = []
-    await db.firestore().collection('tasks').get()
-    .then(snapshot => {
-        snapshot.forEach((doc) => {
-            tasks.push(doc.data())
-        })
-        console.log(tasks)
-        res.send(tasks)
-    })
-    .catch(err => {
-        console.log(err)
-        res.status(404).send(err + ' fail')
-    })
-})
 
-apP.get('/status', (req, res) => {
+app.get('/status', (req, res) => {
     res.send({
         message: 'status is fine'
     })
 })
 
-apP.listen(process.env.PORT || 8081)
+app.listen(process.env.PORT || 8081)
