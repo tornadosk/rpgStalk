@@ -1,6 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <q-btn color="primary" icon="check" label="" @click="store.increment()">{{store.counter}}</q-btn>
+    <q-btn color="primary" icon="home" label="" @click="changeToZone()">change to zone</q-btn>
   <div style="height: 500px; width: 500px">
       <!-- 🤿 Vue, please render the Google Map Component here -->
         <GMapMap
@@ -54,9 +55,20 @@ export default defineComponent({
   },
   name: 'IndexPage',
   setup () {
-    const center = { lat: 42.259021798391785, lng: -71.72179090075265 }
+    const center = ref({ lat: 42.25839043021693, lng: -71.72179090075265 })
+    const zonePosition = { lat: 42.25839043021693, lng: -71.72179090075265 }
+    navigator.geolocation.getCurrentPosition(position)
+    function position (pos) {
+      console.log(pos)
+      center.value.lat = pos.coords.latitude
+      center.value.lng = pos.coords.longitude
+    }
+    function changeToZone () {
+      center.value = zonePosition
+    }
+
     const options = {
-      mapId: '15b7b8e2b926c2ae',
+      mapId: '12fd41bea9f82686',
       zoomControl: false,
       mapTypeControl: false,
       scaleControl: false,
@@ -136,7 +148,7 @@ export default defineComponent({
     //     })
     //   }
     // })
-    return { center, markers, options, germanCities, myMapRef, heatData, store }
+    return { center, markers, options, germanCities, myMapRef, heatData, store, changeToZone }
   }
 })
 </script>
