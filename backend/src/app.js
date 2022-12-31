@@ -10,7 +10,6 @@ app.use(bodyparser.json())
 app.use(cors())
 
 
-
 app.use(function(req, res, next) {
     if (req.originalUrl === 'some.web.ifneedraw') {
         app.use(express.raw())
@@ -28,8 +27,9 @@ app.use(require('./routes'));
 
 const { admin, firestore } = require('./db')
 
-console.log('hello')
+console.log('hello');
 
+const setup = import('./setup/index.js');
 
 app.get('/status', (req, res) => {
     res.send({
@@ -37,4 +37,4 @@ app.get('/status', (req, res) => {
     })
 })
 
-app.listen(process.env.PORT || 8081)
+app.listen(process.env.PORT || 8081);

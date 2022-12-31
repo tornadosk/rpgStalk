@@ -1,6 +1,5 @@
 const { firestore } = require('../db')
 
-
 exports.getTasks = (async (req, res) => {
     let tasks = [] 
     await firestore().collection('tasks').get()
