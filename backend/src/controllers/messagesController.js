@@ -1,6 +1,8 @@
 const { firestore } = require('../db')
 const firebaseAdmin = require('firebase-admin')
 
+const message = require('../common/message')
+
 require('firebase/firestore')
 
 exports.getMessages = (async (req, res) => {

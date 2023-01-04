@@ -3,7 +3,7 @@
 // eslint-disable-line global-require
 const { firestore } = require('../db')
 const firebaseAdmin = require('firebase-admin')
-const knownObjects  = require('./knownObjects')
+const knownObjects  = require('../common/knownObjects')
 
 require('firebase/firestore')
 
