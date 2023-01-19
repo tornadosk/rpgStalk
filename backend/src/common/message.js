@@ -9,7 +9,8 @@ class message {
         this.data = { 
             'sender'    : sender,
             'recipient' : recipient,
-            'message'   : text
+            'message'   : text,
+            'recipient_read' : false
         }
         // checks for sender, recipient, text, whatever
         this.send();
