@@ -1,11 +1,20 @@
 
 const routes = [
   {
+    path: '/auth',
+    component: () => import('layouts/noLayout.vue'),
+    children: [
+      { path: '/auth/login', component: () => import('pages/Auth.vue') }
+    ]
+  },
+  {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
+    meta: { requiresAuth: true },
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
-      { path: '/params', component: () => import('pages/parametersPage.vue') }
+      { path: '/params', component: () => import('pages/parametersPage.vue') },
+      { path: '/settings', component: () => import('pages/Settings.vue') }
     ]
   },
 

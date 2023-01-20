@@ -12,6 +12,8 @@ const ESLintPlugin = require('eslint-webpack-plugin')
 
 const { configure } = require('quasar/wrappers')
 
+const API_LOCAL = 'http://localhost:8081',
+  API_PRODUCTION = 'https://herokuapp.com/'
 module.exports = configure(function (ctx) {
   return {
     // https://v2.quasar.dev/quasar-cli-webpack/supporting-ts
@@ -43,11 +45,10 @@ module.exports = configure(function (ctx) {
       // 'ionicons-v4',
       // 'mdi-v5',
       // 'fontawesome-v6',
-      // 'eva-icons',
+      'eva-icons',
       // 'themify',
       // 'line-awesome',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
-
       'roboto-font', // optional, you are not bound to it
       'material-icons' // optional, you are not bound to it
     ],
@@ -56,7 +57,8 @@ module.exports = configure(function (ctx) {
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
       env: {
-        APIMAP: 'AIzaSyDU0u-cXakQ2sa5Oo-_zUiLuJ6eLbF6mWI'
+        APIMAP: 'AIzaSyDU0u-cXakQ2sa5Oo-_zUiLuJ6eLbF6mWI',
+        API: API_LOCAL
       },
       // transpile: false,
       // publicPath: '/',
@@ -109,7 +111,10 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'Notify',
+        'Loading'
+      ]
     },
 
     // animations: 'all', // --- includes all animations
