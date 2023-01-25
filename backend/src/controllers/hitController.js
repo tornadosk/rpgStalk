@@ -12,7 +12,7 @@ require('firebase/firestore')
 const phys_hit_effect = 33
 
 exports.getHit = (async (req, res) => {
-    // console.log( req.query );
+    console.log( req.query );
     try {
         let newh = {};
         newh = await interact.hit( req.query["id"], 0, 0, phys_hit_effect ); // returning map
