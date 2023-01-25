@@ -15,7 +15,8 @@ exports.getHit = (async (req, res) => {
     // console.log( req.query );
     try {
         let newh = {};
-        newh = await interact.hit( req.query["id"], 0, 0, phys_hit_effect ); // returning map
+        let effect = phys_hit_effect * (req.query["hit"] ? req.query["hit"] : 1);
+        newh = await interact.hit( req.query["id"], 0, 0, effect ); // returning map
         if( newh ) {
             firestore().collection('entities').doc(req.query["id"]).get()
             .then( doc => {
