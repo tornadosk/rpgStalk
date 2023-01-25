@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 router.use(function( req, res, next ) {
-  // console.log("Router called" + req.params);
+  console.log("Router called" + req.params);
   next();
 })
 
