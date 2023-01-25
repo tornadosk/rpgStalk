@@ -9,5 +9,6 @@ router.use('/tasks', require('./tasks'));
 router.use('/messages', require('./messages'));
 router.use('/coords', require('./coords'));
 router.use('/health', require('./health'));
+router.use('/hit', require('./hit'));
 
 module.exports = router;

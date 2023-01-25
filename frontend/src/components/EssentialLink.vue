@@ -18,6 +18,9 @@
     </q-item-section>
   </q-item>
 </template>
+<style lang="sass" scoped>
+
+</style>
 
 <script>
 import { defineComponent } from 'vue'
