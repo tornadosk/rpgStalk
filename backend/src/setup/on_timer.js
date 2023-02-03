@@ -8,7 +8,7 @@ const interact = require('../common/interact')
 class on_timer {
 
     constructor( interval ) {
-        this.interval = interval ? interval : 10000;
+        this.interval = interval ? interval : 5000;
         this.loadingTimer = setInterval( this.intervalFunc.bind(this), interval );
         this.lastCalled = '';
         this.listObjectTypes = ['аномалия', 'тварь зоны', 'артефакт'];

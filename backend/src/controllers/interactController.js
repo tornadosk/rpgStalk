@@ -1,5 +1,5 @@
 // interaction request like -- http://localhost:8081/api/interact?id=golobog&ble_id=0DEAFBEEF0&rss=104
-// Interaction with BLE-only objects of unknown coordinates (such as, smart artifacts).
+// Interaction with BLE-only objects of unknown coordinates (such as, not-so-smart artifacts).
 // 
 const { firestore } = require('../db')
 const firebaseAdmin = require('firebase-admin')
