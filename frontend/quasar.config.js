@@ -163,7 +163,7 @@ module.exports = configure(function (ctx) {
         short_name: 'stalkerRPG App',
         description: 'stalkerhelp device',
         display: 'standalone',
-        orientation: 'portrait',
+        orientation: 'landscape',
         background_color: '#ffffff',
         theme_color: '#027be3',
         icons: [

@@ -93,6 +93,12 @@ const linksList = [
     link: '/params'
   },
   {
+    title: 'Inventory',
+    caption: 'All your current items',
+    icon: 'bag',
+    link: '/inventory'
+  },
+  {
     title: 'Settings',
     caption: 'Change preferences, logout',
     icon: 'settings',
@@ -152,6 +158,7 @@ export default defineComponent({
           alertOnHealthLoss('You are lossing health!')
         }
         store.health = doc.data().health
+        console.log(doc.data())
         progress1.value = doc.data().health /100
       })
     })

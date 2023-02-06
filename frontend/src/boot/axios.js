@@ -3,6 +3,7 @@ import axios from 'axios'
 import { initializeApp } from 'firebase/app'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { firebaseConfig } from './firebaseConfig'
+// import { initializeFirestore } from 'firebase/firestore'
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -14,6 +15,9 @@ const api = axios.create({ baseURL: `${process.env.API}` })
 
 export default boot(({ router, app }) => {
   initializeApp(firebaseConfig)
+  // const settings = ({ experimentalAutoDetectLongPolling: true }) /// this is if womething got broken with firebase
+  // initializeFirestore(initApp, settings, '888505170121')
+  console.log(firebaseConfig)
   // for use inside Vue files (Options API) through this.$axios and this.$api
   const auth = getAuth()
   router.beforeEach((to, from, next) => {
