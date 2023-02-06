@@ -48,7 +48,6 @@ export default {
     const progress1 = ref(store.health / 100)
     const progress2 = ref(store.radiation)
     const progress3 = ref(store.poison)
-    const messages = ref(store.messages)
     const addMedpack = () => {
       api.get(`/api/health?id=${store.id}&heal_phys=1`, { headers: { 'Content-type': 'application/json' } })
         .then((response) => {
@@ -101,7 +100,6 @@ export default {
       progress1,
       progress2,
       progress3,
-      messages,
       progressLabel1: computed(() => (progress1.value * 100).toFixed(2) + '%'),
       progressLabel2: computed(() => (progress2.value * 100).toFixed(2) + '%'),
       progressLabel3: computed(() => (progress3.value * 100).toFixed(2) + '%')

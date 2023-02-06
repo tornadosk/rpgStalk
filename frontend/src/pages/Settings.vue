@@ -47,6 +47,7 @@ export default {
       getAuth().signOut()
       router.push('/auth/login')
         .then(() => {
+          store.logout()
           $q.notify({ message: 'Sign Out Success.' })
         })
         .catch(error => console.log('error', error))

@@ -17,10 +17,14 @@ export const useStatusStore = defineStore('status', {
     faction: '',
     type: '',
     coordinates: '',
-    is_alive: 'false'
+    is_alive: 'false',
+    contacts: []
   }),
   getters: {
-    doubleCount: (state) => state.counter * 2
+    doubleCount: (state) => state.counter * 2,
+    getChatById: (state) => {
+      return (userId) => state.messages.find((chat) => chat.chatUsers.includes(userId))
+    }
   },
   actions: {
     changeHelath (value) {
@@ -44,6 +48,8 @@ export const useStatusStore = defineStore('status', {
           this.type = doc.data().type
           this.coordinates = doc.data().coordinates
           this.is_alive = doc.data().is_alive
+          this.contacts = doc.data().contacts
+          this.chats = []
         })
       })
     },
@@ -52,26 +58,54 @@ export const useStatusStore = defineStore('status', {
       await api.get('/api/health?id=golobog', { headers: { 'Content-type': 'application/json' } })
       .then((response) => {
         showSuccessNotification('something arrived')
-        console.log(response.data)
         this.health = response.data.health
         this.callsign = response.data.callsign
       })
       
     },
+    async getChats () {
+      const db = getFirestore()
+      const q = query(collection(db, "chats"), where("chatUsers", "array-contains", `${this.callsign}`))
+      let chats = []
+      const unsub = onSnapshot(q, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          chats.push(doc.data())
+        })
+      this.messages = chats
+      })
+    },
     async getMessages (data) { //eslint-disable-next-line
       const db = getFirestore()
-    const q = query(collection(db, "messages"), where("recepient", "==", `${getAuth().currentUser.uid}`));
+    const q = query(collection(db, "messages"), where("recipient", "==", "*"));
     let mess = []
+    let cont = []
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       let messages = [];
+      let contacts = [];
       querySnapshot.forEach((doc) => {
         
-        messages.push(doc.data().message)
+        messages.push(doc.data())
         mess.push(doc.data())
-        this.messages = messages
+        contacts.push(doc.data().sender)    
       })
-      console.log("current: ", messages.join(", "))
+      let unique = [...new Set(contacts)];
+      this.messages = messages
+      this.contacts = unique
     })
+    },
+    logout() {
+      this.counter = 0,
+      this.health = 0,
+      this.radiation = 0,
+      this.poison =  0,
+      this.messages =  [],
+      this.callsign = '',
+      this.id =  '',
+      this.uid =  '',
+      this.faction = '',
+      this.type =  '',
+      this.coordinates = '',
+      this.is_alive = 'false'
     }
   }
 })

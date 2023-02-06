@@ -2,6 +2,12 @@
   <q-page class="fit row wrap justify-around items-center content-center">
     <!-- <q-btn color="primary" icon="check" label="" @click="store.increment()">{{store.counter}}</q-btn>
     <q-btn color="primary" icon="home" label="" @click="changeToZone()">change to zone</q-btn> -->
+    <div>
+      {{ center.lat + ' ' +center.lng }}
+    </div>
+    <div>
+      {{ store.uid }}
+    </div>
   <div class="self-center normal border">
       <!-- 🤿 Vue, please render the Google Map Component here -->
         <GMapMap
@@ -102,12 +108,13 @@ export default defineComponent({
     }
     function doSomething(lat, long) {
       console.log(lat + " " + long)
-      watchEffect(() => {
         center.value.lat = lat
         center.value.long = long
         console.log("position change")
-      })
     }
+    watchEffect (() => {
+      center
+    })
     function success(position) {
       doSomething(position.coords.latitude, position.coords.longitude);
     }
