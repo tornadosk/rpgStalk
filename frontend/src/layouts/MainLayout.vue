@@ -81,10 +81,10 @@ const linksList = [
     link: '/'
   },
   {
-    title: 'Messages',
+    title: 'Mailbox',
     caption: 'Spread the word',
     icon: 'chat',
-    link: '/messages'
+    link: '/mailbox'
   },
   {
     title: 'Your Health',
@@ -112,14 +112,20 @@ export default defineComponent({
   components: {
     EssentialLink
   },
-
+  async preFetch () {
+    const store = useStatusStore()
+    await store.getUser()
+    await store.getMessages()
+    console.log('mainLAyout prefetc')
+    console.log(store.messages)
+  },
   setup () {
     const store = useStatusStore()
     const leftDrawerOpen = ref(false)
     // store.getHealth()
     store.getUser()
+    // store.getMessages()
     const progress1 = ref(store.health / 100)
-    console.log(progress1)
     const newPrimaryColor = '#933' // portion to autochange color on the go
     setCssVar('primary', newPrimaryColor)
     setCssVar('primary-darkened', lighten(newPrimaryColor, -10))
@@ -136,7 +142,6 @@ export default defineComponent({
     const db = getFirestore()
     const qPath = store.uid
     const qStatus = query(collection(db, 'entities'), where('uid', '==', `${qPath}`))
-    console.log(qStatus)
     const gotHit = () => {
       api.get(`api/hit?id=${store.id}&hit=1`, { headers: { 'Content-type': 'application/json' } })
       .then(() => {
@@ -150,7 +155,6 @@ export default defineComponent({
       {}
     ])
     onMounted(() => {
-      console.log("mounted")
       const unsubscribe = onSnapshot(qStatus, (querySnapshot) => {
       let messages = [];
       querySnapshot.forEach((doc) => {

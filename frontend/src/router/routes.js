@@ -15,8 +15,10 @@ const routes = [
       { path: '', component: () => import('pages/IndexPage.vue') },
       { path: '/params', component: () => import('pages/parametersPage.vue') },
       { path: '/settings', component: () => import('pages/Settings.vue') },
-      { path: '/messages', component: () => import('src/pages/mainMessages.vue') },
-      { path: '/chat/:otherUserCall', component: () => import('pages/chatPage.vue') },
+      { path: '/mailbox', component: () => import('pages/MailboxMain.vue') },
+      { path: '/mail/:otherUserMail', component: () => import('pages/mailPage.vue') },
+      // { path: '/messages', component: () => import('src/pages/mainMessages.vue') }, discontinued for overfunctionality; AK
+      // { path: '/chat/:otherUserCall', component: () => import('pages/chatPage.vue') }, saved for future references; AK
       { path: '/inventory', component: () => import('pages/InventoryPage.vue') }
     ]
   },
