@@ -1,6 +1,6 @@
 const { firestore } = require('../db')
 const firebaseAdmin = require('firebase-admin')
-
+const {v4:uuidv4} = require('uuid')
 require('firebase/firestore')
 
 class message {
@@ -10,7 +10,8 @@ class message {
             'sender'    : sender,
             'recipient' : recipient,
             'message'   : text,
-            'recipient_read' : false
+            'recipient_read' : false,
+            'id'             : uuidv4()
         }
         // checks for sender, recipient, text, whatever
         this.send();
