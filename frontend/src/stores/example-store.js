@@ -3,6 +3,7 @@ import { getFirestore, query, collection, where, onSnapshot, getDocs } from 'fir
 import { getAuth } from 'firebase/auth'
 import { api } from 'src/boot/axios'
 import { showSuccessNotification } from 'src/functions/function-show-notifications'
+import { reactive } from 'vue'
 
 export const useStatusStore = defineStore('status', {
   state: () => ({
@@ -10,7 +11,7 @@ export const useStatusStore = defineStore('status', {
     health: 0,
     radiation: 0.1,
     poison: 0.05,
-    messages: [],
+    messages: reactive([]),
     callsign: '',
     id: '',
     uid: '',
@@ -53,6 +54,7 @@ export const useStatusStore = defineStore('status', {
       const q = query(collection(db, 'entities'), where('uid', '==', `${getAuth().currentUser.uid}`))
       const unsub = (q, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
+          console.log('=============' + doc.data())
           this.id = doc.id
           this.callsign = doc.data().callsign
           this.health = doc.data().health
@@ -87,25 +89,33 @@ export const useStatusStore = defineStore('status', {
     //   this.messages = chats
     //   })
     // },
-    async getMessages (data) { //eslint-disable-next-line
+    async getMessages () { //eslint-disable-next-line
       const db = getFirestore()
       const q = query(collection(db, "messages"), where("recipient", "==", "*"));
       let mess = []
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          mess.push(doc.data())   
+          querySnapshot.docChanges().forEach((doc) => {
+            console.log('this is what we need from all=> ' + doc.type)
+            if (doc.type === 'added') {
+              mess.push({...doc.doc.data()})   
+            }
+            this.messages = mess
         })
       })
       console.log(mess)
       console.log(this.callsign)
       const eq = query(collection(db, "messages"), where("recipient", "==", `${this.callsign}`))
       const unsub = onSnapshot(eq, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          mess.push(doc.data())
+        querySnapshot.docChanges().forEach((doc) => {
+          console.log('this is what we need => ' + doc.type)
+          if (doc.type === 'added') {
+            mess.push({...doc.doc.data()})   
+          }
+          this.messages = mess
         })
       })
-      console.log(mess)
       this.messages = mess
+      console.log(this.messages)
     },
     logout() {
       this.counter = 0,

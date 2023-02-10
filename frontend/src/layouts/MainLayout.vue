@@ -124,6 +124,8 @@ export default defineComponent({
     const leftDrawerOpen = ref(false)
     // store.getHealth()
     store.getUser()
+    store.getMessages()
+    store.getUserUpdates()
     // store.getMessages()
     const progress1 = ref(store.health / 100)
     const newPrimaryColor = '#933' // portion to autochange color on the go
