@@ -27,8 +27,7 @@
 <script>
 // import { storeToRefs } from 'pinia'
 import { useStatusStore } from 'src/stores/example-store'
-import { reactive } from 'vue'
-// import { onMounted, ref } from 'vue'
+import { computed } from 'vue'
 
 export default {
   preFetch () {
@@ -37,9 +36,13 @@ export default {
   setup () {
     const store = useStatusStore()
     // const messages = ref([store.messages])
-    // // onMounted(() => {
-    // //   store.getMessages()
-    // // })
+    // const messages = ref(store.messages)
+    // const health = ref(store.health)
+    // onMounted(async () => {
+    //   await store.getMessages()
+    //   messages.value = store.messages
+    //   health.value = store.health
+    // })
     // store.$subscribe((mess) => {
     //   console.log(mess)
     //   messages.value = mess.payload.messages
@@ -52,12 +55,9 @@ export default {
     // messages.value = computed(() => store.messages)
     // const newM = store.messages
     // console.log(messages)
-    // eslint-disable-next-line
-    const messages = reactive(store.$state.messages)
-    const health = reactive(store.$state.health)
     return {
-      messages,
-      health
+      messages: computed(() => store.messages),
+      health: computed(() => store.health)
     }
   }
 }

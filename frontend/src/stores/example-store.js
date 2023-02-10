@@ -9,8 +9,8 @@ export const useStatusStore = defineStore('status', {
   state: () => ({
     counter: 0,
     health: 0,
-    radiation: 0.1,
-    poison: 0.05,
+    radiation: 0,
+    poison: 0,
     messages: reactive([]),
     callsign: '',
     id: '',
@@ -46,6 +46,7 @@ export const useStatusStore = defineStore('status', {
         // doc.data() is never undefined for query doc snapshots
         console.log(doc.id, " => ", doc.data());
         this.callsign = doc.data().callsign
+        this.health = doc.data().health
       });
       
     },

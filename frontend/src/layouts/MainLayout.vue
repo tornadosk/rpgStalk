@@ -164,6 +164,8 @@ export default defineComponent({
           alertOnHealthLoss('You are lossing health!')
         }
         store.health = doc.data().health
+        store.radiation = doc.data().damage_rad
+        store.poison = doc.data().damage_tox
         console.log(doc.data())
         progress1.value = doc.data().health /100
       })
