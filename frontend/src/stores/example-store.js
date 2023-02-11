@@ -1,16 +1,17 @@
 import { defineStore } from 'pinia'
-import { getFirestore, query, collection, where, onSnapshot } from 'firebase/firestore'
+import { getFirestore, query, collection, where, onSnapshot, getDocs } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { api } from 'src/boot/axios'
 import { showSuccessNotification } from 'src/functions/function-show-notifications'
+import { reactive } from 'vue'
 
 export const useStatusStore = defineStore('status', {
   state: () => ({
     counter: 0,
     health: 0,
-    radiation: 0.1,
-    poison: 0.05,
-    messages: [],
+    radiation: 0,
+    poison: 0,
+    messages: reactive([]),
     callsign: '',
     id: '',
     uid: '',
@@ -24,6 +25,9 @@ export const useStatusStore = defineStore('status', {
     doubleCount: (state) => state.counter * 2,
     getChatById: (state) => {
       return (userId) => state.messages.find((chat) => chat.chatUsers.includes(userId))
+    },
+    getMailById: (state) => {
+      return (mailId) => state.messages.find((message) => message.id === mailId)
     }
   },
   actions: {
@@ -37,8 +41,21 @@ export const useStatusStore = defineStore('status', {
     async getUser () {
       const db = getFirestore()
       const q = query(collection(db, 'entities'), where('uid', '==', `${getAuth().currentUser.uid}`))
-      const unsub = onSnapshot(q, (querySnapshot) => {
+      const req = await getDocs(q) 
+      req.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+        this.callsign = doc.data().callsign
+        this.health = doc.data().health
+      });
+      
+    },
+    async getUserUpdates () {
+      const db = getFirestore()
+      const q = query(collection(db, 'entities'), where('uid', '==', `${getAuth().currentUser.uid}`))
+      const unsub = (q, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
+          console.log('=============' + doc.data())
           this.id = doc.id
           this.callsign = doc.data().callsign
           this.health = doc.data().health
@@ -49,7 +66,6 @@ export const useStatusStore = defineStore('status', {
           this.coordinates = doc.data().coordinates
           this.is_alive = doc.data().is_alive
           this.contacts = doc.data().contacts
-          this.chats = []
         })
       })
     },
@@ -63,42 +79,54 @@ export const useStatusStore = defineStore('status', {
       })
       
     },
-    async getChats () {
-      const db = getFirestore()
-      const q = query(collection(db, "chats"), where("chatUsers", "array-contains", `${this.callsign}`))
-      let chats = []
-      const unsub = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          chats.push(doc.data())
-        })
-      this.messages = chats
-      })
+    async sendMessage () {
+      await api.post('/api/messages')
     },
-    async getMessages (data) { //eslint-disable-next-line
+    // async getChats () {
+    //   const db = getFirestore()
+    //   const q = query(collection(db, "chats"), where("chatUsers", "array-contains", `${this.callsign}`))
+    //   let chats = []
+    //   const unsub = onSnapshot(q, (querySnapshot) => {
+    //     querySnapshot.forEach((doc) => {
+    //       chats.push(doc.data())
+    //     })
+    //   this.messages = chats
+    //   })
+    // },
+    async getMessages () { //eslint-disable-next-line
       const db = getFirestore()
-    const q = query(collection(db, "messages"), where("recipient", "==", "*"));
-    let mess = []
-    let cont = []
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      let messages = [];
-      let contacts = [];
-      querySnapshot.forEach((doc) => {
-        
-        messages.push(doc.data())
-        mess.push(doc.data())
-        contacts.push(doc.data().sender)    
+      const q = query(collection(db, "messages"), where("recipient", "==", "*"));
+      let mess = []
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          querySnapshot.docChanges().forEach((doc) => {
+            console.log('this is what we need from all=> ' + doc.type)
+            if (doc.type === 'added') {
+              mess.push({...doc.doc.data()})   
+            }
+            this.messages = mess
+        })
       })
-      let unique = [...new Set(contacts)];
-      this.messages = messages
-      this.contacts = unique
-    })
+      console.log(mess)
+      console.log(this.callsign)
+      const eq = query(collection(db, "messages"), where("recipient", "==", `${this.callsign}`))
+      const unsub = onSnapshot(eq, (querySnapshot) => {
+        querySnapshot.docChanges().forEach((doc) => {
+          console.log('this is what we need => ' + doc.type)
+          if (doc.type === 'added') {
+            mess.push({...doc.doc.data()})   
+          }
+          this.messages = mess
+        })
+      })
+      this.messages = mess
+      console.log(this.messages)
     },
     logout() {
       this.counter = 0,
       this.health = 0,
       this.radiation = 0,
-      this.poison =  0,
-      this.messages =  [],
+      this.poison = 0,
+      this.messages = [],
       this.callsign = '',
       this.id =  '',
       this.uid =  '',

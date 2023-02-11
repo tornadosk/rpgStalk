@@ -46,8 +46,8 @@ export default {
   setup () {
     const store = useStatusStore()
     const progress1 = ref(store.health / 100)
-    const progress2 = ref(store.radiation)
-    const progress3 = ref(store.poison)
+    const progress2 = ref(store.radiation / 100)
+    const progress3 = ref(store.poison / 100)
     const addMedpack = () => {
       api.get(`/api/health?id=${store.id}&heal_phys=1`, { headers: { 'Content-type': 'application/json' } })
         .then((response) => {
