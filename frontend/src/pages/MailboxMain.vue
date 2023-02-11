@@ -1,7 +1,7 @@
 
 <template>
     <q-page class="flex q-pa-md">
-      {{ health }}
+        <div class="q-pa-md content-center text-white">Your messages:</div>
     <q-list
     class="full-width"
     separator>
@@ -14,14 +14,19 @@
         v-ripple
       >
         <q-item-section>
-          <q-item-label>{{ message.sender }}</q-item-label>
+            <q-item-label>
+                Message from: {{ message.sender }} to {{ message.recipient === '*' ? 'all' : message.recipient }}
+            </q-item-label>
         </q-item-section>
 
-        <q-item-section side>
-          <q-icon name="chat_bubble" color="green" />
+        <q-item-section side v-if="!message.recipient_read">
+          <q-icon name="chat_bubble" color="red" />
         </q-item-section>
       </q-item>
     </q-list>
+    <q-footer elevated>
+        <q-btn class="full-width" type="button" round flat color="white" stack icon="send" label="Send Message"/>
+    </q-footer>
 </q-page>
 </template>
 <script>
@@ -30,34 +35,10 @@ import { useStatusStore } from 'src/stores/example-store'
 import { computed } from 'vue'
 
 export default {
-  preFetch () {
-    console.log('from prefetch')
-  },
   setup () {
     const store = useStatusStore()
-    // const messages = ref([store.messages])
-    // const messages = ref(store.messages)
-    // const health = ref(store.health)
-    // onMounted(async () => {
-    //   await store.getMessages()
-    //   messages.value = store.messages
-    //   health.value = store.health
-    // })
-    // store.$subscribe((mess) => {
-    //   console.log(mess)
-    //   messages.value = mess.payload.messages
-    // })
-    // console.log(messages)
-    // console.log(store.messages)
-    // watchEffect(() => {
-    //   messages.value = store.messages
-    // })
-    // messages.value = computed(() => store.messages)
-    // const newM = store.messages
-    // console.log(messages)
     return {
-      messages: computed(() => store.messages),
-      health: computed(() => store.health)
+      messages: computed(() => store.messages)
     }
   }
 }

@@ -79,6 +79,9 @@ export const useStatusStore = defineStore('status', {
       })
       
     },
+    async sendMessage () {
+      await api.post('/api/messages')
+    },
     // async getChats () {
     //   const db = getFirestore()
     //   const q = query(collection(db, "chats"), where("chatUsers", "array-contains", `${this.callsign}`))
