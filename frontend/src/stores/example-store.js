@@ -79,8 +79,14 @@ export const useStatusStore = defineStore('status', {
       })
       
     },
-    async sendMessage () {
-      await api.post('/api/messages')
+    async sendMessage (data) {
+      await api.post('/api/send', { data }, { headers: { 'Content-type': 'application/json' }} )
+      .then((response) => {
+        console.log(response)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
     },
     // async getChats () {
     //   const db = getFirestore()

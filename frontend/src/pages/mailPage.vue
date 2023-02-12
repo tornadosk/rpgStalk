@@ -81,7 +81,7 @@ export default {
         admin: false,
         sender: store.callsign,
         recipient: username,
-        message: textOfMessage
+        text: textOfMessage
       }
       console.log(textOfMessage)
       console.log(username)
@@ -91,7 +91,6 @@ export default {
       } else {
         showErrorNotification("Can't sent message.")
       }
-      this.username = ''
       this.prompt = false
       this.textOfMessage = ''
     }
