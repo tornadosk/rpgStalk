@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { getFirestore, query, collection, where, onSnapshot, getDocs } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { api } from 'src/boot/axios'
-import { showSuccessNotification } from 'src/functions/function-show-notifications'
+import { showErrorNotification, showSuccessNotification } from 'src/functions/function-show-notifications'
 import { reactive } from 'vue'
 
 export const useStatusStore = defineStore('status', {
@@ -80,12 +80,14 @@ export const useStatusStore = defineStore('status', {
       
     },
     async sendMessage (data) {
-      await api.post('/api/send', { data }, { headers: { 'Content-type': 'application/json' }} )
+      await api.post('/api/send', data, { headers: { 'Content-type': 'application/json' }} )
       .then((response) => {
+        showSuccessNotification('Your message have been sent!')
         console.log(response)
       })
       .catch((error) => {
         console.log(error)
+        showErrorNotification('Your message failed...')
       })
     },
     // async getChats () {

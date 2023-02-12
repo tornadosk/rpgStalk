@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { showErrorNotification, showSuccessNotification } from 'src/functions/function-show-notifications'
+import { showErrorNotification } from 'src/functions/function-show-notifications'
 import { useStatusStore } from 'src/stores/example-store'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
@@ -87,9 +87,8 @@ export default {
       console.log(username)
       if (store.is_alive) {
         store.sendMessage(data)
-        showSuccessNotification('Your message have been sent.')
       } else {
-        showErrorNotification("Can't sent message.")
+        showErrorNotification('We are concerned that you are not alive.')
       }
       this.prompt = false
       this.textOfMessage = ''
