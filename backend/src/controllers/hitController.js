@@ -12,7 +12,7 @@ require('firebase/firestore')
 const phys_hit_effect = 33
 
 exports.getHit = (async (req, res) => {
-    // console.log( req.query );
+    console.log( req.query );
     try {
         let newh = {};
         let effect = phys_hit_effect * (req.query["hit"] ? req.query["hit"] : 1);

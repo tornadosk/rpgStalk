@@ -1,5 +1,9 @@
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
+import { initializeApp } from 'firebase/app'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { firebaseConfig } from './firebaseConfig'
+// import { initializeFirestore } from 'firebase/firestore'
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -7,10 +11,34 @@ import axios from 'axios'
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: 'https://api.example.com' })
+const api = axios.create({ baseURL: `${process.env.API}` })
 
-export default boot(({ app }) => {
+export default boot(({ router, app }) => {
+  initializeApp(firebaseConfig)
+  // const settings = ({ experimentalAutoDetectLongPolling: true }) /// this is if womething got broken with firebase
+  // initializeFirestore(initApp, settings, '888505170121')
+  console.log(firebaseConfig)
   // for use inside Vue files (Options API) through this.$axios and this.$api
+  const auth = getAuth()
+  router.beforeEach((to, from, next) => {
+    return new Promise((resolve, reject) => {
+      const unsubscribe = onAuthStateChanged(auth, function (user) {
+        unsubscribe()
+        if (!user && to.path !== '/auth/login') {
+          next('/auth/login')
+        } else if (user) {
+          if (to.path === '/auth/login') {
+            next('/')
+          } else {
+            next()
+          }
+        } else {
+          next()
+        }
+        resolve(user)
+      }, reject)
+    })
+  })
 
   app.config.globalProperties.$axios = axios
   // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)

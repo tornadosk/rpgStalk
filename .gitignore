@@ -1,6 +1,6 @@
 backend/node_modules
 frontend/node_modules
 frontend/src-cordova
-frontend/src/boot/firebaseconfig.js
+frontend/src/boot/firebaseConfig.js
 .env
 backend/src/firebaseconfig.json

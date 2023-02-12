@@ -79,6 +79,9 @@ exports.getSetHealth = (async (req, res) => {
         .then( () => {
             console.log( 'User ' + req.query["id"] + ' Health' );
         })
+        .catch((err) => {
+            console.log(err)
+        })
     } catch(err) {
         res.status(404)
         res.send('Error: ' + err)
